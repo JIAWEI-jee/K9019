@@ -11,8 +11,8 @@
 #include "adc.h"
 #include "wdt.h"
 
-#define SKU 9011
-#define SOFT_VER "1.03.00"
+#define SKU 9019
+#define SOFT_VER "1.01.00"
 
 u16 adc_cnt = 0;
 u8  first_heat_std = 0,fault_std = 0;
@@ -167,7 +167,7 @@ u16 calibration_temperature(u16 temper)
 			hal_uart_putchar(flash_info.correct_value);
 		 flash_info.correct_sign = 2; //为负公差
 		}	
-		if ((flash_info.correct_value < 2)||(flash_info.correct_value > 20))
+		if ((flash_info.correct_value < 2)||(flash_info.correct_value > 10))
 		{
 		   flash_info.correct_value = 0;
 			 flash_info.correct_sign = 0;
@@ -205,7 +205,7 @@ u16 temp_calc ( u16 uR510,u16 uRw )
  
 	u1 = (  (( float ) uRw /1000) - (( float ) uR510/1000) ) / (( ( float ) uR510/1000)/510 );
 	if (u1 < 0)  return 0xff;
-	gm_printf ( "R = %f  \r\n",u1 );
+//	gm_printf ( "R = %f  \r\n",u1 );
 	u1 = u1 / Length;
 	if (u1 < 73) return 0;
 	// gm_printf("average R = %f \r\n",u1);
@@ -264,9 +264,9 @@ void temperature_handle ( void )
 
 		//	KEY_printf ( "adv1 = %d adv3 =%d \r\n",adc_val1,adc_val3 );  //pjw set
 		temp = temp_calc ( adc_val1, adc_val3 );
-			KEY_printf ( "temp val:%d \r\n",temp );
+		//	KEY_printf ( "temp val:%d \r\n",temp );
 	temp =	calibration_temperature(temp);
-		KEY_printf ( "cali_temp val:%d \r\n",temp );
+	//	KEY_printf ( "cali_temp val:%d \r\n",temp );
     
 		if ( adc_val1 >50 )
 		{

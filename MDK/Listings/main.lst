@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -22,8 +22,8 @@ line level    source
   11          #include "adc.h"
   12          #include "wdt.h"
   13          
-  14          #define SKU 9011
-  15          #define SOFT_VER "1.03.00"
+  14          #define SKU 9019
+  15          #define SOFT_VER "1.01.00"
   16          
   17          u16 adc_cnt = 0;
   18          u8  first_heat_std = 0,fault_std = 0;
@@ -62,7 +62,7 @@ line level    source
   51   2          {
   52   3            
   53   3            set_device_state ( OFF );
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 2   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 2   
 
   54   3            ht1621_all_clear();
   55   3            set_pwm ( 0 );
@@ -126,7 +126,7 @@ line level    source
  113   3            flah_save_data();
  114   3          }
  115   2          else if ( key_val == KEY_3_PRES ) //定时
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 3   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 3   
 
  116   2          {
  117   3      
@@ -190,7 +190,7 @@ line level    source
  175   3          flah_save_data();
  176   3          producte_send_cmd(0x02, 0x02);
  177   3         }
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 4   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 4   
 
  178   2        }
  179   1          if (flash_info.correct_sign == 1)
@@ -222,7 +222,7 @@ line level    source
  205   1       
  206   1        u1 = (  (( float ) uRw /1000) - (( float ) uR510/1000) ) / (( ( float ) uR510/1000)/510 );
  207   1        if (u1 < 0)  return 0xff;
- 208   1        gm_printf ( "R = %f  \r\n",u1 );
+ 208   1      //  gm_printf ( "R = %f  \r\n",u1 );
  209   1        u1 = u1 / Length;
  210   1        if (u1 < 73) return 0;
  211   1        // gm_printf("average R = %f \r\n",u1);
@@ -254,7 +254,7 @@ line level    source
  237   3            {
  238   4              break;
  239   4            }
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 5   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 5   
 
  240   3      
  241   3      
@@ -283,9 +283,9 @@ line level    source
  264   2      
  265   2          //  KEY_printf ( "adv1 = %d adv3 =%d \r\n",adc_val1,adc_val3 );  //pjw set
  266   2          temp = temp_calc ( adc_val1, adc_val3 );
- 267   2            KEY_printf ( "temp val:%d \r\n",temp );
+ 267   2          //  KEY_printf ( "temp val:%d \r\n",temp );
  268   2        temp =  calibration_temperature(temp);
- 269   2          KEY_printf ( "cali_temp val:%d \r\n",temp );
+ 269   2        //  KEY_printf ( "cali_temp val:%d \r\n",temp );
  270   2          
  271   2          if ( adc_val1 >50 )
  272   2          {
@@ -318,7 +318,7 @@ line level    source
  299   5                ht1621_all_clear();
  300   5               lcd_display_gap ( flash_info.gap );
  301   5                cali_display_std = 1;
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 6   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 6   
 
  302   5              }
  303   4              else
@@ -382,7 +382,7 @@ line level    source
  361   2        }
  362   1      }
  363          
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 7   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 7   
 
  364          
  365          void Controll_Heat ( u16 temp_set,u16 temp_now )
@@ -446,7 +446,7 @@ line level    source
  423   3      
  424   3          }
  425   2        }
-C51 COMPILER V9.56.0.0   MAIN                                                              08/17/2020 14:11:22 PAGE 8   
+C51 COMPILER V9.56.0.0   MAIN                                                              08/21/2020 10:10:49 PAGE 8   
 
  426   1      }
  427          
@@ -471,8 +471,8 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1815    ----
-   CONSTANT SIZE    =    208    ----
+   CODE SIZE        =   1744    ----
+   CONSTANT SIZE    =    162    ----
    XDATA SIZE       =      5      26
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

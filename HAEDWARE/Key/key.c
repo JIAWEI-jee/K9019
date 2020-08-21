@@ -161,6 +161,8 @@ if(Calibration_key_driver() ==  KEY_CALI2_LONG)
 		if ((get_device_state (  )  == OFF)&&(flash_info.correct_std == 0))
 		{
 	  calibration_std = 1;
+			 flash_info.correct_std = 1;
+			flah_save_data();
 		}
 		else
 		{	
