@@ -1,0 +1,143 @@
+C51 COMPILER V9.56.0.0   PRODUCT                                                           01/20/2021 11:03:33 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE PRODUCT
+OBJECT MODULE PLACED IN .\output\product.obj
+COMPILER INVOKED BY: C:\program_list\keil\C51\BIN\C51.EXE ..\HAEDWARE\product\product.c LARGE OPTIMIZE(8,SPEED) BROWSE I
+                    -NCDIR(..\source;..\HAEDWARE\Flash;..\HAEDWARE\DELAY;..\HAEDWARE\HT1621B;..\HAEDWARE\Uart;..\HAEDWARE\Key;..\HAEDWARE\Tim
+                    -er;..\HAEDWARE\Pwm;..\HAEDWARE\ADC;..\HAEDWARE\WDT;..\HAEDWARE\product) DEBUG OBJECTEXTEND PRINT(.\Listings\product.lst)
+                    - OBJECT(.\output\product.obj)
+
+line level    source
+
+   1          #include "product.h"
+   2          #include "key.h"
+   3          #include "timer.h"
+   4          #include "wdt.h"
+   5          #include "uart.h"
+   6          #include "adc.h"
+   7          
+   8          
+   9          static void product_GPIO_Init_Config ( void )
+  10          {
+  11   1              P2M0 = 0x61;                        //P35设置为非施密特数字带上拉输入
+  12   1              P2M2 = 0XC1;                        //设置为推挽输出
+  13   1              PRODUCT_OK = 1;
+  14   1      }
+  15          
+  16          static enum producte_test_list product_check_test ( void )
+  17          {
+  18   1              u8 ret = 0;
+  19   1              product_GPIO_Init_Config();
+  20   1              if ( PRODUCT_CHECK_IN == 0 )
+  21   1              {
+  22   2                      ret = CHECK_SUCCESS;
+  23   2              }
+  24   1              else
+  25   1              {
+  26   2                      ret = CHECK_FAIL;
+  27   2              }
+  28   1              return ret;
+  29   1      }
+  30          
+  31          
+  32          u8 Res_Calc ( void )
+  33          {
+  34   1              u16 adc_val1 = 0,adc_val3 = 0;
+  35   1              float u1 = 0;
+  36   1              get_voltage ( &adc_val1,&adc_val3 );
+  37   1              u1 = (  ( ( float ) adc_val3 /1000 ) - ( ( float ) adc_val1/1000 ) ) / ( ( ( float ) adc_val1/1000 ) /510
+             - );
+  38   1              gm_printf ( "R = %f  \r\n",u1 );
+  39   1              if ( ( u1 < 800 ) && ( u1 > 700 ) )
+  40   1              {
+  41   2                      return RES_OK;
+  42   2              }
+  43   1              return 0;
+  44   1      }
+  45          u8 state = PRODUCTE_INIT;
+  46          u16 test_time_timeout = 0;
+  47          
+  48          void product_test_handle ( void )
+  49          {
+  50   1      
+  51   1              switch ( state )
+C51 COMPILER V9.56.0.0   PRODUCT                                                           01/20/2021 11:03:33 PAGE 2   
+
+  52   1              {
+  53   2                      case PRODUCTE_INIT:
+  54   2      
+  55   2                              if ( ( KEY_1==0 ) && ( KEY_1==0 ) && ( KEY_1==0 ) )
+  56   2                              {
+  57   3                                      state = PRODUCTE_PASS;
+  58   3                                      test_time_timeout = 0;
+  59   3                              }
+  60   2                              if ( ++test_time_timeout >= 10000 )
+  61   2                              {
+  62   3                                      KEY_printf ( " PRODUCTE_ERROR\r\n" );
+  63   3                                      state = PRODUCTE_ERROR;
+  64   3                                      test_time_timeout = 0;
+  65   3                              }
+  66   2      
+  67   2                              break;
+  68   2                      case PRODUCTE_TEST:
+  69   2                              if ( Res_Calc() == RES_OK )
+  70   2                              {
+  71   3                                      state = PRODUCTE_PASS;
+  72   3                                      test_time_timeout = 0;
+  73   3                              }
+  74   2                              if ( ++test_time_timeout >= 5 )
+  75   2                              {
+  76   3                                      KEY_printf ( " PRODUCTE_ERROR\r\n" );
+  77   3                                      state = PRODUCTE_ERROR;
+  78   3                                      test_time_timeout = 0;
+  79   3                              }
+  80   2                              break;
+  81   2                      case PRODUCTE_PASS:
+  82   2                              ac_out = 1;
+  83   2                              PRODUCT_OK = 0;
+  84   2                              //      KEY_printf ( " ENTER_PRODUCTE_ok\r\n" );
+  85   2                              break;
+  86   2      
+  87   2                      case PRODUCTE_ERROR:
+  88   2                              //      KEY_printf ( " ENTER_PRODUCTE_ERROR\r\n" );
+  89   2                              PRODUCT_OK = 1;
+  90   2                              break;
+  91   2      
+  92   2              }
+  93   1      }
+  94          
+  95          
+  96          
+  97          void product_check_process ( void )
+  98          {
+  99   1              if ( product_check_test() == CHECK_SUCCESS )
+ 100   1              {
+ 101   2      
+ 102   2                      KEY_printf ( " ENTER_TEST_MODE\r\n" );
+ 103   2                      ac_out = 1;
+ 104   2      
+ 105   2                      while ( 1 )
+ 106   2                      {
+ 107   3                              product_test_handle();
+ 108   3                              clear_wdt();
+ 109   3                      }
+ 110   2              }
+ 111   1      }
+ 112          
+
+C51 COMPILER V9.56.0.0   PRODUCT                                                           01/20/2021 11:03:33 PAGE 3   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    442    ----
+   CONSTANT SIZE    =     48    ----
+   XDATA SIZE       =      3       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

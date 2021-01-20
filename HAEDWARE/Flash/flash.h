@@ -35,29 +35,28 @@ typedef enum GAP_TEMP
 {
 	GAP_WARM_temp	= 30,
 	GAP_1_temp 	= 43,
-	GAP_2_temp	= 50,
-	GAP_3_temp	= 54,
-	GAP_4_temp	= 59,
-	GAP_5_temp	= 65,
-	GAP_6_temp	= 70,
-	GAP_7_temp	= 75,
-	GAP_8_temp	= 75,
-	GAP_9_temp	= 80,
-	One_Heat_Temp = 80,
-
+	GAP_2_temp	= 47,
+	GAP_3_temp	= 50,
+	GAP_4_temp	= 54,
+	GAP_5_temp	= 60,
+	GAP_6_temp	= 65,
+	GAP_7_temp	= 70,
+	GAP_8_temp	= 74,
+	GAP_9_temp	= 78,
+	One_Heat_Temp = 77,
 };
 	typedef enum corrected_value
 	{
 		corrected_value_warm_temp	= 1,
 		corrected_value_GAP_1_temp	= 1,
-		corrected_value_GAP_2_temp	= 3,
-		corrected_value_GAP_3_temp	= 3,
-		corrected_value_GAP_4_temp	= 5,
-		corrected_value_GAP_5_temp	= 5,
-		corrected_value_GAP_6_temp	= 8,
-		corrected_value_GAP_7_temp	= 12,
-		corrected_value_GAP_8_temp	= 12,
-		corrected_value_GAP_9_temp	= 12,
+		corrected_value_GAP_2_temp	= 1,
+		corrected_value_GAP_3_temp	= 1,
+		corrected_value_GAP_4_temp	= 3,
+		corrected_value_GAP_5_temp	= 3,
+		corrected_value_GAP_6_temp	= 4,
+		corrected_value_GAP_7_temp	= 6,
+		corrected_value_GAP_8_temp	= 6,
+		corrected_value_GAP_9_temp	= 8,
 	
 	};
 
@@ -73,7 +72,7 @@ typedef enum GAP_TEMP
 			corrected_time_GAP_6_temp	= 30*5,
 			corrected_time_GAP_7_temp	= 60*3,
 			corrected_time_GAP_8_temp	= 60*4,
-			corrected_time_GAP_9_temp	= 60*4,
+			corrected_time_GAP_9_temp	= 60*5,
 		
 		};
 

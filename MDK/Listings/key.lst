@@ -1,213 +1,229 @@
-C51 COMPILER V9.56.0.0   KEY                                                               08/21/2020 10:10:49 PAGE 1   
+C51 COMPILER V9.56.0.0   KEY                                                               01/20/2021 11:03:33 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE KEY
 OBJECT MODULE PLACED IN .\output\key.obj
 COMPILER INVOKED BY: C:\program_list\keil\C51\BIN\C51.EXE ..\HAEDWARE\Key\key.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..
                     -\source;..\HAEDWARE\Flash;..\HAEDWARE\DELAY;..\HAEDWARE\HT1621B;..\HAEDWARE\Uart;..\HAEDWARE\Key;..\HAEDWARE\Timer;..\HA
-                    -EDWARE\Pwm;..\HAEDWARE\ADC;..\HAEDWARE\WDT) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) TABS(2) OBJECT(.\output\key.obj
-                    -)
+                    -EDWARE\Pwm;..\HAEDWARE\ADC;..\HAEDWARE\WDT;..\HAEDWARE\product) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\ou
+                    -tput\key.obj)
 
 line level    source
 
    1          #include "key.h"
    2          #include "delay.h"
    3          #include "flash.h"
-   4          u8 calibration_std = 0;
-   5          #define KEY_PRESS_TIME 700
-   6          
-   7          void key_init(void)
-   8          {
-   9   1        P3M5 = 0x61;                        //P35设置为非施密特数字带上拉输入
-  10   1        P2M5 = 0x61;                        //P25设置为非施密特数字带上拉输入
-  11   1        P2M6 = 0x61;                        //P26设置为非施密特数字带上拉输入
-  12   1        P0M2 = 0x61;                        //P02设置为非施密特数字带上拉输入
-  13   1      }
-  14          
-  15          
-  16          static unsigned char key_driver(void) 
-  17          {     
-  18   1          static unsigned char key_state = 0;         
-  19   1          static unsigned int key_time = 0;           
-  20   1          unsigned char key_press, key_return; 
-  21   1       
-  22   1          key_return = N_KEY;                         
-  23   1       
-  24   1           key_press = KEY_1; 
-  25   1          switch (key_state)     
-  26   1          {       
-  27   2              case KEY_STATE_0:                       
-  28   2                  if (key_press == 0)                     
-  29   2                  {
-  30   3                      key_time = 0;                   
-  31   3                      key_state = KEY_STATE_1;       
-  32   3                  }        
-  33   2                  break;
-  34   2       
-  35   2              case KEY_STATE_1:                       
-  36   2                  if (key_press == 0)                     
-  37   2                  {
-  38   3                      key_time++;                     
-  39   3                      if(key_time>=SINGLE_KEY_TIME)   
-  40   3                      {
-  41   4                          key_state = KEY_STATE_2;    
-  42   4                      }
-  43   3              delay_ms(10);
-  44   3                  }         
-  45   2                  else key_state = KEY_STATE_0;       
-  46   2                  break; 
-  47   2       
-  48   2              case KEY_STATE_2:                       
-  49   2                  if(key_press == 1)                       
-  50   2                  { 
-  51   3                       key_return = KEY_1_SHORT;            
-  52   3                       key_state = KEY_STATE_0;       
-C51 COMPILER V9.56.0.0   KEY                                                               08/21/2020 10:10:49 PAGE 2   
+   4          #include "timer.h"
+   5          u8 calibration_std = 0;
+   6          #define KEY_PRESS_TIME 700
+   7          
+   8          void key_init(void)
+   9          {
+  10   1              P3M5 = 0x61;                        //P35éè???a·?ê??üì?êy×?′?é?à-ê?è?
+  11   1              P2M5 = 0x61;                        //P25éè???a·?ê??üì?êy×?′?é?à-ê?è?
+  12   1              P2M6 = 0x61;                        //P26éè???a·?ê??üì?êy×?′?é?à-ê?è?
+  13   1              P0M2 = 0x61;                        //P02éè???a·?ê??üì?êy×?′?é?à-ê?è?
+  14   1              P2M7 = 0XC1;                        //éè???aí?íìê?3?
+  15   1              P0M0 = 0XC1;                        //éè???aí?íìê?3?
+  16   1              P2M1 = 0X51;                        //éè????·?ê??üì?′???à-ê?è?
+  17   1      }
+  18          
+  19          
+  20          static unsigned char key_driver(void) 
+  21          {     
+  22   1          static unsigned char key_state = 0;         
+  23   1          static unsigned int key_time = 0;           
+  24   1          unsigned char key_press, key_return; 
+  25   1       
+  26   1          key_return = N_KEY;                         
+  27   1       
+  28   1           key_press = KEY_1; 
+  29   1          switch (key_state)     
+  30   1          {       
+  31   2              case KEY_STATE_0:                       
+  32   2                  if (key_press == 0)                     
+  33   2                  {
+  34   3                      key_time = 0;                   
+  35   3                      key_state = KEY_STATE_1;       
+  36   3                  }        
+  37   2                  break;
+  38   2       
+  39   2              case KEY_STATE_1:                       
+  40   2                  if (key_press == 0)                     
+  41   2                  {
+  42   3                      key_time++;                     
+  43   3                      if(key_time>=SINGLE_KEY_TIME)   
+  44   3                      {
+  45   4                          key_state = KEY_STATE_2;    
+  46   4                      }
+  47   3                                      delay_ms(10);
+  48   3                  }         
+  49   2                  else key_state = KEY_STATE_0;       
+  50   2                  break; 
+  51   2       
+  52   2              case KEY_STATE_2:                       
+C51 COMPILER V9.56.0.0   KEY                                                               01/20/2021 11:03:33 PAGE 2   
 
-  53   3                  } 
-  54   2                  else
-  55   2                  {
-  56   3                      key_time++;                     
-  57   3       
-  58   3                      if(key_time >= LONG_KEY_TIME)   
-  59   3                      {
-  60   4                          key_return = KEY_1_LONG;         
-  61   4                          key_state = KEY_STATE_3;    
-  62   4                      }
-  63   3              delay_ms(10);
-  64   3                  }
-  65   2                  break;
-  66   2       
-  67   2            case KEY_STATE_3:                         
-  68   2                if (key_press == 1) 
-  69   2                {
-  70   3                    key_state = KEY_STATE_0;          
-  71   3                }         
-  72   2                break; 
-  73   2       
-  74   2              default:                               
-  75   2                  key_state = KEY_STATE_0;
-  76   2                  break;
-  77   2          }
-  78   1       
-  79   1          return key_return;                         
-  80   1      
-  81   1      }
-  82          static unsigned char Calibration_key_driver(void) 
-  83          {     
-  84   1          static unsigned char key_state = 0;         
-  85   1          static unsigned int key_time = 0;           
-  86   1          unsigned char key_press, key_return; 
-  87   1       
-  88   1          key_return = N_KEY;                         
-  89   1      
-  90   1            key_press = KEY_2;
-  91   1          switch (key_state)     
-  92   1          {       
-  93   2              case KEY_STATE_0:                       
-  94   2                  if (key_press == 0)                     
-  95   2                  {
-  96   3                      key_time = 0;                   
-  97   3                      key_state = KEY_STATE_1;       
-  98   3                  }        
-  99   2                  break;
- 100   2       
- 101   2              case KEY_STATE_1:                       
- 102   2                  if (key_press == 0)                     
- 103   2                  {
- 104   3                      key_time++;                     
- 105   3                      if(key_time>=SINGLE_KEY_TIME)   
- 106   3                      {
- 107   4                          key_state = KEY_STATE_2;    
- 108   4                      }
- 109   3              delay_ms(10);
- 110   3                  }         
- 111   2                  else key_state = KEY_STATE_0;       
- 112   2                  break; 
- 113   2       
- 114   2              case KEY_STATE_2:                       
-C51 COMPILER V9.56.0.0   KEY                                                               08/21/2020 10:10:49 PAGE 3   
+  53   2                  if(key_press == 1)                       
+  54   2                  { 
+  55   3                       key_return = KEY_1_SHORT;            
+  56   3                       key_state = KEY_STATE_0;       
+  57   3                  } 
+  58   2                  else
+  59   2                  {
+  60   3                      key_time++;                     
+  61   3       
+  62   3                      if(key_time >= LONG_KEY_TIME)   
+  63   3                      {
+  64   4                          key_return = KEY_1_LONG;         
+  65   4                          key_state = KEY_STATE_3;    
+  66   4                      }
+  67   3                                      delay_ms(10);
+  68   3                  }
+  69   2                  break;
+  70   2       
+  71   2            case KEY_STATE_3:                         
+  72   2                if (key_press == 1) 
+  73   2                {
+  74   3                    key_state = KEY_STATE_0;          
+  75   3                }         
+  76   2                break; 
+  77   2       
+  78   2              default:                               
+  79   2                  key_state = KEY_STATE_0;
+  80   2                  break;
+  81   2          }
+  82   1       
+  83   1          return key_return;                         
+  84   1      
+  85   1      }
+  86          static unsigned char Calibration_key_driver ( void )
+  87          {
+  88   1              static unsigned char key_state = 0;
+  89   1              static unsigned int key_time = 0;
+  90   1              unsigned char key_press, key_return;
+  91   1      
+  92   1              key_return = N_KEY;
+  93   1      
+  94   1              key_press = KEY_2;
+  95   1              switch ( key_state )
+  96   1              {
+  97   2                      case KEY_STATE_0:
+  98   2                              if ( key_press == 0 )
+  99   2                              {
+ 100   3                                      key_time = 0;
+ 101   3                                      key_state = KEY_STATE_1;
+ 102   3                              }
+ 103   2                              break;
+ 104   2      
+ 105   2                      case KEY_STATE_1:
+ 106   2                              if ( key_press == 0 )
+ 107   2                              {
+ 108   3                                      key_time++;
+ 109   3                                      if ( key_time>=SINGLE_KEY_TIME )
+ 110   3                                      {
+ 111   4                                              key_state = KEY_STATE_2;
+ 112   4                                      }
+ 113   3                                      delay_ms ( 10 );
+ 114   3                              }
+C51 COMPILER V9.56.0.0   KEY                                                               01/20/2021 11:03:33 PAGE 3   
 
- 115   2                  if(key_press == 1)                       
- 116   2                  { 
- 117   3                       key_return = KEY_1_SHORT;            
- 118   3                       key_state = KEY_STATE_0;       
- 119   3                  } 
- 120   2                  else
- 121   2                  {
- 122   3                      key_time++;                     
- 123   3       
- 124   3                      if(key_time >=  LONG_KEY_CALI_TIME)   
- 125   3                      {
- 126   4                          key_return = KEY_CALI2_LONG;         
- 127   4                          key_state = KEY_STATE_3;    
- 128   4                      }
- 129   3              delay_ms(10);
- 130   3                  }
- 131   2                  break;
- 132   2       
- 133   2            case KEY_STATE_3:                         
- 134   2                if (key_press == 1) 
- 135   2                {
- 136   3                    key_state = KEY_STATE_0;          
- 137   3                }         
- 138   2                break; 
- 139   2       
- 140   2              default:                               
- 141   2                  key_state = KEY_STATE_0;
- 142   2                  break;
- 143   2          }
- 144   1       
- 145   1          return key_return;                         
- 146   1      
- 147   1      }
- 148          
- 149          u8 key_scan(void)
- 150          {
- 151   1        static u8 key_up = 1;
- 152   1        static u16 key_pres_time = 0;
+ 115   2                              else
+ 116   2                              {
+ 117   3                                      key_state = KEY_STATE_0;
+ 118   3                              }
+ 119   2                              break;
+ 120   2      
+ 121   2                      case KEY_STATE_2:
+ 122   2                              if ( key_press == 1 )
+ 123   2                              {
+ 124   3                                      key_return = KEY_1_SHORT;
+ 125   3                                      key_state = KEY_STATE_0;
+ 126   3                              }
+ 127   2                              else
+ 128   2                              {
+ 129   3                                      key_time++;
+ 130   3      
+ 131   3                                      if ( key_time >=  LONG_KEY_CALI_TIME )
+ 132   3                                      {
+ 133   4                                              key_return = KEY_CALI2_LONG;
+ 134   4                                              key_state = KEY_STATE_3;
+ 135   4                                      }
+ 136   3                                      delay_ms ( 10 );
+ 137   3                              }
+ 138   2                              break;
+ 139   2      
+ 140   2                      case KEY_STATE_3:
+ 141   2                              if ( key_press == 1 )
+ 142   2                              {
+ 143   3                                      key_state = KEY_STATE_0;
+ 144   3                              }
+ 145   2                              break;
+ 146   2      
+ 147   2                      default:
+ 148   2                              key_state = KEY_STATE_0;
+ 149   2                              break;
+ 150   2              }
+ 151   1      
+ 152   1              return key_return;
  153   1      
- 154   1      
- 155   1        if(key_driver() == KEY_1_LONG)
- 156   1        {
- 157   2            return KEY_1_PRES;
- 158   2        }
- 159   1      if(Calibration_key_driver() ==  KEY_CALI2_LONG)
- 160   1        {
- 161   2          if ((get_device_state (  )  == OFF)&&(flash_info.correct_std == 0))
- 162   2          {
- 163   3          calibration_std = 1;
- 164   3             flash_info.correct_std = 1;
- 165   3            flah_save_data();
- 166   3          }
- 167   2          else
- 168   2          { 
- 169   3          calibration_std = 0;  
- 170   3          }
- 171   2        }
- 172   1        else if(key_up && (KEY_2 == 0 || KEY_3 == 0)&&(calibration_std == 0))
- 173   1        {
- 174   2          delay_ms(50); 
- 175   2          key_up=0;
- 176   2          if(KEY_2 == 0)
-C51 COMPILER V9.56.0.0   KEY                                                               08/21/2020 10:10:49 PAGE 4   
+ 154   1      }
+ 155          
+ 156          u8 key_scan ( void )
+ 157          {
+ 158   1              static u8 key_up = 1;
+ 159   1      
+ 160   1              if ( key_driver() == KEY_1_LONG )
+ 161   1              {
+ 162   2                      return KEY_1_PRES;
+ 163   2              }
+ 164   1              else if ( key_up && ( KEY_1 == 0 ) )
+ 165   1              {
+ 166   2                      delay_ms ( 50 );
+ 167   2                      key_up=0;
+ 168   2                      return LED_STAY_ON;
+ 169   2              }
+ 170   1      if(Calibration_key_driver() ==  KEY_CALI2_LONG)
+ 171   1              {
+ 172   2                      if ( ( get_device_state (  )  == OFF ) && ( flash_info.correct_std == 0 ) )
+ 173   2                      {
+ 174   3                              calibration_std = 1;
+ 175   3                              flash_info.correct_std = 1;
+ 176   3                              flah_save_data();
+C51 COMPILER V9.56.0.0   KEY                                                               01/20/2021 11:03:33 PAGE 4   
 
- 177   2            return KEY_3_PRES; 
- 178   2          else if(KEY_3 == 0)
- 179   2            return KEY_2_PRES;
- 180   2        }else if(KEY_2 == 1 && KEY_3 == 1)
- 181   1          key_up=1;   
- 182   1      
- 183   1        if(KEY_1 == 1 && key_pres_time > 1)
- 184   1          key_pres_time = 0;
- 185   1        return 0;
- 186   1      }
+ 177   3                      }
+ 178   2                      else
+ 179   2                      {
+ 180   3                              calibration_std = 0;
+ 181   3                      }
+ 182   2              }
+ 183   1              else if ( key_up && ( KEY_2 == 0 || KEY_3 == 0 ) && ( calibration_std == 0 ) )
+ 184   1              {
+ 185   2                      delay_ms ( 50 );
+ 186   2                      key_up=0;
+ 187   2                      if ( KEY_2 == 0 )
+ 188   2                      {
+ 189   3                              return KEY_3_PRES;
+ 190   3                      }
+ 191   2                      else if ( KEY_3 == 0 )
+ 192   2                      {
+ 193   3                              return KEY_2_PRES;
+ 194   3                      }
+ 195   2              }
+ 196   1              else if ( ( KEY_2 == 1 ) && ( KEY_3 == 1 ) && ( KEY_1 == 1 ) )
+ 197   1              {
+ 198   2                      key_up=1;
+ 199   2              }
+ 200   1      
+ 201   1              return 0;
+ 202   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    511    ----
+   CODE SIZE        =    532    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     10       4
+   XDATA SIZE       =      8       4
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

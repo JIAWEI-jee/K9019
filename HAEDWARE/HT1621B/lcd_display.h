@@ -17,6 +17,7 @@
 #define TMDIS		0x08
 
 #define Error_STD   0xff
+#define Error_Res_STD 0XFE
 
 extern u8 cali_display_std;
 

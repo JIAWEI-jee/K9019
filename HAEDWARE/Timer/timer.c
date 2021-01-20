@@ -2,8 +2,8 @@
 #include "flash.h"
 #include "uart.h"
 #include "lcd_display.h"
-
-//----------------time---------------
+#include "key.h"
+/*----------------time---------------*/
 u8 time_cnt = 0;
 u16 time_sec = 0;
 u16 cnt_heat_time = 0;
@@ -16,12 +16,48 @@ u16 time_heat = 0;
 u16 temp_time = 0 ;
 u16 correct_time = 0;
 u8 one_heat = 0;
+u16 exti_cail_cnt = 0;
+u16 led_time_cnt = 0;
+u8   LED_std = 0;
+/**************************************/
+void led_set_on(void)
+{
+   LED_std = 1;
+  led_time_cnt = 0;
+}
+void led_set_off(void)
+{
+  LED_std = 0;
+  led_time_cnt = 0;
+}
+
+static void led_time(void)
+{
+  if(LED_std == 1)
+	{
+		ac_out = 1;
+	  if (++led_time_cnt > 300)
+		{
+		  ac_out = 0;
+			LED_std = 0;
+			led_time_cnt = 0;
+		}
+	
+	}
+else
+{
+ ac_out = 0;
+}
+
+}
+
+
 
 void set_time_sec_val ( u16 sec )
 {
 	time_sec = sec;
 	time_cnt = 0;
-	gm_printf ( "set time second:%d\r\n",sec );
+//	gm_printf ( "set time second:%d\r\n",sec );
 }
 void set_correct_time(u8 gap)
 {
@@ -167,7 +203,7 @@ void set_time_sec ( void )
 		cnt_heat_time = 0;
 		temp_time = 0;
 	}
-	gm_printf ( "time second:%d \r\n",time_sec );
+//	gm_printf ( "time second:%d \r\n",time_sec );
 }
 
 
@@ -196,6 +232,7 @@ void time0_init ( void )
 //10ms
 void TIMER0_Rpt ( void ) interrupt TIMER0_VECTOR
 {
+    led_time();
 	if ( get_device_state() == ON ) //flash_info.timer != TIMER_ON &&
 	{
 		time_cnt++;
@@ -249,6 +286,15 @@ void TIMER0_Rpt ( void ) interrupt TIMER0_VECTOR
 			}
 			//gm_printf("time_sec=%d \r\n",time_sec);
 			time_cnt = 0;
+		}
+	}
+	
+	else if (calibration_std == 1)
+	{
+	  if(++exti_cail_cnt > cali_time)
+		{
+		  calibration_std = 0;
+		  exti_cail_cnt = 0;
 		}
 	}
 }

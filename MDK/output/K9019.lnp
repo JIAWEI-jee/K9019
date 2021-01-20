@@ -9,7 +9,8 @@
 ".\output\timer.obj",
 ".\output\pwm.obj",
 ".\output\adc.obj",
-".\output\wdt.obj" 
+".\output\wdt.obj",
+".\output\product.obj" 
 TO ".\output\K9019" 
 PRINT(".\Listings\K9019.m51") RAMSIZE(256) 
 CODE( 0X0000-0X3FFF )
